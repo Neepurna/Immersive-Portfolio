@@ -1,4 +1,4 @@
-import {TransformControls, OrbitControls } from '@react-three/drei'
+import {Sky, TransformControls, OrbitControls } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
 import Env from './Env.jsx'
 
@@ -35,6 +35,8 @@ export default function Experience()
         <ambientLight 
                 intensity={ 0.5 } 
         />
+
+        <Sky/>
         
         <Env />
 
