@@ -1,6 +1,8 @@
-import {Sky, TransformControls, OrbitControls } from '@react-three/drei'
-import { Perf } from 'r3f-perf'
+import {Environment,Sky,OrbitControls } from '@react-three/drei'
+
 import Env from './Env.jsx'
+import Avatar from '/avatar.jsx'
+import Yama from './Yama.jsx'
 
 
 
@@ -9,7 +11,7 @@ export default function Experience()
 {
     return <>
 
-        <Perf position="top-left" />
+        
 
         <OrbitControls 
              rotateSpeed={.3}
@@ -30,15 +32,19 @@ export default function Experience()
         <directionalLight 
                 castShadow position={ [ 1, 2, 3 ] } 
                 intensity={ 1.5 } 
-                shadow-normalBias={ 0.04 } 
-        />
+                shadow-normalBias={ 0.5 } 
+/>
         <ambientLight 
                 intensity={ 0.5 } 
-        />
+/>
 
-        <Sky/>
         
+        
+        
+        {/* <Avatar /> */}
+        <Yama />
         <Env />
+        <Sky/>
 
     </>
 }
