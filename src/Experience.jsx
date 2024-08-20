@@ -16,7 +16,7 @@ export default function Experience()
         <OrbitControls 
              rotateSpeed={.3}
              
-             enableDamping = {true}
+             enableDamping = {false}
              enableZoom = {false} 
              maxPolarAngle={2}
              minPOlarAngle={1}
