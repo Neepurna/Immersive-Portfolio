@@ -20,38 +20,40 @@ function LogCameraPosition() {
   return null;
 }
 
-function RotateCamera({ rotationAngle }) {
-  const { camera } = useThree();
-
-  useEffect(() => {
-    camera.rotation.y = rotationAngle;
-  }, [rotationAngle, camera]);
-
-  return null;
-}
-
 function App() {
   const [rotationAngle, setRotationAngle] = useState(0);
+  const [isZoomedIn, setIsZoomedIn] = useState(false);
+  const [basePosition] = useState([7.950236292734576, 2, 7.881748094799187]);
 
-  // You can adjust rotationAngle using setRotationAngle or remove these functions entirely if not needed.
-  const handleRotateLeft = () => {
-    setRotationAngle((prevAngle) => prevAngle - 0.1);
-  };
-
-  const handleRotateRight = () => {
-    setRotationAngle((prevAngle) => prevAngle + 0.1);
+  const handleExit = () => {
+    setIsZoomedIn(false);
+    setRotationAngle(0); // Reset rotation if needed
   };
 
   return (
     <>
-      <Canvas camera={{ position: [7.950236292734576, 2, 7.881748094799187], fov: 30, near: 0.1, far: 10000 }} shadows>
-        <Experience />
-        {/* Disable OrbitControls completely to prevent pointer rotation */}
-        <OrbitControls enabled={false} />
+      <Canvas camera={{ position: basePosition, fov: 30, near: 0.1, far: 10000 }} shadows>
+        <Experience setIsZoomedIn={setIsZoomedIn} />
+        {/* Disable OrbitControls if zoomed in */}
+        <OrbitControls enabled={!isZoomedIn} />
         <LogCameraPosition />
-        {/* Rotating the camera within the Three.js context */}
-        <RotateCamera rotationAngle={rotationAngle} />
       </Canvas>
+      {/* Show Exit button only when zoomed in */}
+      {isZoomedIn && (
+        <button 
+          onClick={handleExit}
+          style={{
+            position: 'absolute',
+            top: 20,
+            right: 20,
+            padding: '10px 20px',
+            fontSize: '16px',
+            cursor: 'pointer'
+          }}
+        >
+          Exit
+        </button>
+      )}
     </>
   );
 }
