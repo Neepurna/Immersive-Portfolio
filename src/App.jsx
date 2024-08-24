@@ -2,6 +2,7 @@ import { Canvas, useThree } from "@react-three/fiber";
 import Experience from "./Experience";
 import { OrbitControls } from "@react-three/drei";
 import { useEffect, useState } from "react";
+import LoadingScreen from "./loadingscreen"; // Make sure the path is correct
 
 function LogCameraPosition() {
   const { camera } = useThree();
@@ -20,39 +21,34 @@ function LogCameraPosition() {
   return null;
 }
 
+function RotateCamera({ rotationAngle }) {
+  const { camera } = useThree();
+
+  useEffect(() => {
+    camera.rotation.y = rotationAngle;
+  }, [rotationAngle, camera]);
+
+  return null;
+}
+
 function App() {
   const [rotationAngle, setRotationAngle] = useState(0);
-  const [isZoomedIn, setIsZoomedIn] = useState(false);
-  const [basePosition] = useState([7.950236292734576, 2, 7.881748094799187]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleExit = () => {
-    setIsZoomedIn(false);
-    setRotationAngle(0); // Reset rotation if needed
+  const handleLoadingComplete = () => {
+    setIsLoading(false); // Hide loading screen when loading is complete
   };
 
   return (
     <>
-      <Canvas camera={{ position: basePosition, fov: 30, near: 0.1, far: 10000 }} shadows>
-        <Experience setIsZoomedIn={setIsZoomedIn} />
-        {/* Disable OrbitControls if zoomed in */}
-        <OrbitControls enabled={!isZoomedIn} />
-        <LogCameraPosition />
-      </Canvas>
-      {/* Show Exit button only when zoomed in */}
-      {isZoomedIn && (
-        <button 
-          onClick={handleExit}
-          style={{
-            position: 'absolute',
-            top: 20,
-            right: 20,
-            padding: '10px 20px',
-            fontSize: '16px',
-            cursor: 'pointer'
-          }}
-        >
-          Exit
-        </button>
+      {isLoading && <LoadingScreen onLoaded={handleLoadingComplete} />}
+      {!isLoading && (
+        <Canvas camera={{ position: [7.950236292734576, 2, 7.881748094799187], fov: 30, near: 0.1, far: 10000 }} shadows>
+          <Experience />
+          <OrbitControls enabled={false} />
+          <LogCameraPosition />
+          <RotateCamera rotationAngle={rotationAngle} />
+        </Canvas>
       )}
     </>
   );

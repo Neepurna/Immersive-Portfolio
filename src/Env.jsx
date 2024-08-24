@@ -1,27 +1,22 @@
 import { useGLTF } from '@react-three/drei'
 import { useThree, useFrame } from '@react-three/fiber'
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect } from 'react'
 import * as THREE from 'three'
 
-export default function Env({ setIsZoomedIn }) {
+export default function Env() {
   const env = useGLTF('./env.glb')
   const { camera } = useThree()
   const clickableObjects = useRef([])
-  const [targetPosition, setTargetPosition] = useState(null)
-  const [targetLookAt, setTargetLookAt] = useState(null)
 
   // Function to handle camera zoom
   const handleZoom = (clickedObject) => {
     const box = new THREE.Box3().setFromObject(clickedObject)
     const center = box.getCenter(new THREE.Vector3())
 
-    const direction = new THREE.Vector3().subVectors(center, camera.position).normalize()
-    const distance = 5
-    const newPosition = camera.position.clone().add(direction.multiplyScalar(distance))
-
-    setTargetPosition(newPosition)
-    setTargetLookAt(center)
-    setIsZoomedIn(true)
+    // Calculate a new camera position that zooms in on the clicked object
+    const newPosition = center.clone().add(new THREE.Vector3(0, 2, 5))
+    camera.position.copy(newPosition)
+    camera.lookAt(center)
   }
 
   // This hook will populate the clickableObjects array with specific targets
@@ -34,18 +29,14 @@ export default function Env({ setIsZoomedIn }) {
     })
   }, [env])
 
-  useFrame(() => {
-    if (targetPosition && targetLookAt) {
-      camera.position.lerp(targetPosition, 0.1)
-      const currentLookAt = new THREE.Vector3()
-      camera.getWorldDirection(currentLookAt)
-      currentLookAt.lerp(targetLookAt.sub(camera.position).normalize(), 0.1)
-      camera.lookAt(camera.position.clone().add(currentLookAt))
+  useFrame(({ mouse, raycaster }) => {
+    raycaster.setFromCamera(mouse, camera)
+    const intersects = raycaster.intersectObjects(clickableObjects.current, true)
 
-      if (camera.position.distanceTo(targetPosition) < 0.1) {
-        setTargetPosition(null)
-        setTargetLookAt(null)
-      }
+    if (intersects.length > 0) {
+      document.body.style.cursor = 'pointer'
+    } else {
+      document.body.style.cursor = 'auto'
     }
   })
 
