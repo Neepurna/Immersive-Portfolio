@@ -1,44 +1,72 @@
-import { useGLTF } from '@react-three/drei'
-import { useThree, useFrame } from '@react-three/fiber'
-import { useRef, useEffect } from 'react'
-import * as THREE from 'three'
+import { useGLTF } from '@react-three/drei';
+import { useThree } from '@react-three/fiber';
+import { useRef, useEffect } from 'react';
+import * as THREE from 'three';
+import { gsap } from 'gsap';
 
-export default function Env() {
-  const env = useGLTF('./env.glb')
-  const { camera } = useThree()
-  const clickableObjects = useRef([])
+export default function Env({
+  setDisableControls,
+  setShowExit,
+  setDisableClick,
+  disableClick,
+  setShowLinkedIn,
+  setIframePosition,
+}) {
+  const env = useGLTF('./env.glb');
+  const { camera } = useThree();
+  const clickableObjects = useRef([]);
+  const originalCameraPosition = useRef(new THREE.Vector3());
+  const originalCameraTarget = useRef(new THREE.Vector3());
 
-  // Function to handle camera zoom
   const handleZoom = (clickedObject) => {
-    const box = new THREE.Box3().setFromObject(clickedObject)
-    const center = box.getCenter(new THREE.Vector3())
+    setDisableControls(true);
+    setShowExit(true);
+    setDisableClick(true);
 
-    // Calculate a new camera position that zooms in on the clicked object
-    const newPosition = center.clone().add(new THREE.Vector3(0, 2, 5))
-    camera.position.copy(newPosition)
-    camera.lookAt(center)
-  }
+    const box = new THREE.Box3().setFromObject(clickedObject);
+    const center = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3());
 
-  // This hook will populate the clickableObjects array with specific targets
+    originalCameraPosition.current.copy(camera.position);
+    originalCameraTarget.current.copy(center);
+
+    const direction = new THREE.Vector3()
+      .subVectors(camera.position, center)
+      .normalize();
+
+    const distance = size.length() * 0.75;
+    const newPosition = center.clone().add(direction.multiplyScalar(distance));
+
+    gsap.to(camera.position, {
+      x: newPosition.x,
+      y: newPosition.y,
+      z: newPosition.z,
+      duration: 1.5,
+      onUpdate: () => {
+        camera.lookAt(center);
+      },
+      onComplete: () => {
+        camera.lookAt(center);
+        if (clickedObject.name === 'capture') {
+          setShowLinkedIn(true);
+          if (typeof setIframePosition === 'function') {
+            setIframePosition(newPosition);
+          } else {
+            console.error('setIframePosition is not a function');
+          }
+        }
+      },
+    });
+  };
+
   useEffect(() => {
-    const targets = ['Capture', 'ObjectName2'] // Replace these with your target object names
+    const targets = ['capture', 'photos', '69763848_2695650407126493_296809581915406336_n'];
     env.scene.traverse((child) => {
       if (targets.includes(child.name)) {
-        clickableObjects.current.push(child)
+        clickableObjects.current.push(child);
       }
-    })
-  }, [env])
-
-  useFrame(({ mouse, raycaster }) => {
-    raycaster.setFromCamera(mouse, camera)
-    const intersects = raycaster.intersectObjects(clickableObjects.current, true)
-
-    if (intersects.length > 0) {
-      document.body.style.cursor = 'pointer'
-    } else {
-      document.body.style.cursor = 'auto'
-    }
-  })
+    });
+  }, [env]);
 
   return (
     <primitive
@@ -47,10 +75,10 @@ export default function Env() {
       position={[0, -2, 0]}
       rotation-y={0}
       onClick={(event) => {
-        if (clickableObjects.current.includes(event.object)) {
-          handleZoom(event.object)
+        if (clickableObjects.current.includes(event.object) && !disableClick) {
+          handleZoom(event.object);
         }
       }}
     />
-  )
+  );
 }

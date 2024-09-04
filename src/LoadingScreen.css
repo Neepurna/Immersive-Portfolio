@@ -1,56 +1,65 @@
 /* LoadingScreen.css */
 .loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: black;
-    z-index: 9999;
-  }
-  
-  .background-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: -1;
-  }
-  
-  .loading-content {
-    text-align: center;
-    color: white;
-    font-family: 'YourCustomFont', sans-serif; /* Make sure to load this font */
-  }
-  
-  .loading-title {
-    font-size: 3rem;
-    margin-bottom: 20px;
-    font-family: 'AestheticFont', sans-serif; /* Replace with your font */
-  }
-  
-  .loading-bar {
-    width: 50%;
-    height: 10px;
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 5px;
-    overflow: hidden;
-  }
-  
-  .loading-progress {
-    width: 0;
-    height: 100%;
-    background-color: #ffffff;
-    animation: loading 3s linear forwards;
-  }
-  
-  @keyframes loading {
-    0% { width: 0; }
-    100% { width: 100%; }
-  }
-  
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  z-index: 9999;
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10; /* Ensures it's above the background image */
+  text-align: center;
+  color: #E0BBE4; /* A soft pastel pink color for text */
+  font-family: 'YourCustomFont', sans-serif; /* Make sure to load this font */
+}
+
+.loading-title {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  font-family: 'AestheticFont', sans-serif; /* Replace with your font */
+  color: #FF6F61; /* A vibrant coral color for the title */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Adds depth with shadow */
+}
+
+.loading-bar {
+  width: 50%;
+  height: 10px;
+  background-color: rgba(224, 187, 228, 0.3); /* Light pastel pink with transparency */
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(255, 105, 180, 0.5); /* Light shadow to make it pop */
+}
+
+.loading-progress {
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #FF6F61, #FFB3BA, #FF6F61); /* Gradient effect for the progress bar */
+  animation: loading 3s linear forwards;
+}
+
+@keyframes loading {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
