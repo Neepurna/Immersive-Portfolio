@@ -1,7 +1,7 @@
 import { Canvas } from '@react-three/fiber';
 import Experience from './Experience';
 import { useEffect, useState } from 'react';
-import LoadingScreen from './LoadingScreen';
+import LoadingScreen from './loadingscreen';
 import { gsap } from 'gsap';
 
 function App() {
