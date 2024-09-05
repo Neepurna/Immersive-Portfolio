@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import loadingImage from './LoadingScreen_One.png'; // Import your PNG image here
 import './LoadingScreen.css';
 
 function LoadingScreen({ onLoaded }) {
@@ -13,7 +12,6 @@ function LoadingScreen({ onLoaded }) {
 
   return (
     <div className="loading-screen">
-      <img src={loadingImage} alt="Loading" className="background-image" />
       <div className="loading-content">
         <h1 className="loading-title">Immersive Portfolio</h1>
         <div className="loading-bar">

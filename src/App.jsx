@@ -71,11 +71,23 @@ function App() {
             onClick={handleExit}
             style={{
               padding: '10px 20px',
-              background: '#ff007f',
+              background: 'linear-gradient(135deg, #6a11cb, #2575fc)',
               color: 'white',
               border: 'none',
-              borderRadius: '5px',
+              borderRadius: '30px',
               cursor: 'pointer',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.2)',
+              transition: 'transform 0.3s, box-shadow 0.3s',
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = 'scale(1.05)';
+              e.target.style.boxShadow = '0px 6px 20px rgba(0, 0, 0, 0.3)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = 'scale(1)';
+              e.target.style.boxShadow = '0px 4px 15px rgba(0, 0, 0, 0.2)';
             }}
           >
             Exit
